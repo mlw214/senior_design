@@ -6,7 +6,11 @@
 var express = require('express');
 var routes = require('./routes');
 var auth = require('./lib/middleware/authenticate');
+var loadUser = require('./lib/middleware/loaduser');
+var verify = require('./lib/middleware/verification');
+var messages = require('./lib/middleware/messages');
 var login = require('./routes/login');
+var register = require('./routes/register');
 var http = require('http');
 var path = require('path');
 
@@ -23,6 +27,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
+app.use(messages);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,9 +35,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
-app.get('/', auth, routes.index);
+// Routing.
+app.get('/', auth, loadUser, routes.index);
 app.get('/login', login.form);
+app.post('/login', login.submit);
+app.get('/register', register.form);
+app.post('/register', verify.notEmpty, register.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

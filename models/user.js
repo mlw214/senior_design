@@ -11,15 +11,15 @@ var userSchema = new mongoose.Schema({
 userSchema.statics.authenticate = function (name, pass, fn) {
 	this.findOne({ username: name }, function (err, doc) {
 		if (err) return fn(err);
-		if (!docs) return fn();
+		if (!doc) return fn();
 		var user = doc;
 		bcrypt.hash(pass, user.salt, function (err, hash) {
 			if (err) return fn(err);
-			if (hash == user.pass) return fn(null, user);
+			if (hash == user.password) return fn(null, user);
 			fn();
 		});
 	});
-}
+};
 // Test for null name and pass?
 userSchema.statics.newInstance = function (name, pass, fn) {
 	var model = this;
@@ -37,6 +37,6 @@ userSchema.statics.newInstance = function (name, pass, fn) {
 			});
 		});
 	});
-}
+};
 
 module.exports = mongoose.model('User', userSchema);
