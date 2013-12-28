@@ -1,6 +1,8 @@
 <% if (locals.messages) { %>
   <% messages.forEach(function (message) { %>
-    <p class='<%= message.type %>'><%= message.string %></p>
+    <div class="alert alert-danger">
+  	<strong><%= message.string %></strong>
+</div>
   <% }) %>
   <% removeMessages() %>
 <% } %>

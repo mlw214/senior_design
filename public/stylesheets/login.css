@@ -1,0 +1,24 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.form-signin,
+.container .alert {
+  max-width: 380px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .btn {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}

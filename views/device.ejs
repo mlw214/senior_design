@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <!-- Common site styles -->
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <!-- Individual page styles -->
+  <link rel="stylesheet" href="/stylesheets/account.css" />
 </head>
 <body>
-  <% include partials/menu %>
-  <h1><%= title %></h1>
-  <p>Welcome to <%= title %></p>
+  <div class="container">
+    <div class="header">
+      <ul class="nav nav-pills pull-right">
+        <li><a href="/">Experiment</a></li>
+        <li class="active"><a href="/device">Device</a></li>
+        <li><a href="/archive">Archive</a></li>
+        <li><a href="/account">Account</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+      <h3 class="text-muted">Remote Lab Sensors</h3>
+    </div>
+    <div class="body">
+      <h1><%= title %></h1>
+    </div>
+  </div>
+
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
 </body>
 </html>

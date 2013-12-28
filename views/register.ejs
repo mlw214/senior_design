@@ -1,34 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link rel="stylesheet" href="/stylesheets/register.css" />
 </head>
 <body>
-  <h1><%= title %></h1>
-  <p>Fill in the form below to sign up!</p>
 
-  <% include partials/messages %>
+  <div class="container">
 
-  <form action='/register' method='post'>
-    <p>
-      <input type='text' name='user[name]' placeholder='Username' />
-    </p>
-    <p>
-      <input type='password' name='user[pass]' 
-          placeholder='Password'/>
-    </p>
-    <p>
-      <input type='password' name='user[confirm]'
-          placeholder='Confirm password' />
-    </p>
-    <!-- Add device id input -->
-    <p>
-    <p>
-      <a href='/login'>Already have an account? Login here</a>
-    </p>
-      <input type='submit' value='Sign up' />
-    </p>
-  </form>
+    <form class="form-register" role="form" action="/register" method="post">
+      <h1>Remote Lab Sensors</h1>
+      <h2 class="form-register-heading">Create Account</h2>
+      <input type="text" class="form-control form-group" 
+        placeholder="Username" name="user[name]" id="uname" required autofocus>
+      <input type="password" class="form-control form-group" 
+        placeholder="Password" name="user[pass]" id="pw1" required>
+      <input type="password" class="form-control form-group" 
+        placeholder="Confirm" name="user[confirm]" id="pw2" required>
+      <p>
+        <small>
+        Password must be between <%= minlen %> and <%= maxlen %> characters.
+        </small>
+      </p>
+      <input type="text" class="form-control form-group" 
+        placeholder="Device ID" name="id" id="device" required>
+      <p>
+        <small>
+        Provided with hardware.
+        </small>
+      </p>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        Create
+      </button>
+      <a href="/login">Have an account? Click here</a>
+
+    </form>
+
+    <% include partials/messages %>
+
+
+  </div> <!-- /container -->
+
+  <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
 </body>
 </html>

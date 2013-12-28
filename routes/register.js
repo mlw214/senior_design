@@ -1,7 +1,11 @@
 var User = require('../models/user');
 
 exports.form = function (req, res) {
-  res.render('register', { title: 'Register' });
+  res.render('register', { 
+  	title: 'Register',
+  	minlen: 8,
+  	maxlen: 50
+  });
 };
 
 exports.submit = function (req, res, next) {
