@@ -13,21 +13,28 @@
   <link rel="stylesheet" href="/stylesheets/account.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <ul class="nav nav-pills pull-right">
-        <li><a href="/">Experiment</a></li>
-        <li class="active"><a href="/device">Device</a></li>
-        <li><a href="/archive">Archive</a></li>
-        <li><a href="/account">Account</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-      <h3 class="text-muted">Remote Lab Sensors</h3>
-    </div>
-    <div class="body">
-      <h1><%= title %></h1>
-    </div>
-  </div>
+  <div id="wrap">
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="/">Experiment</a></li>
+          <li class="active"><a href="/device">Device</a></li>
+          <li><a href="/archive">Archive</a></li>
+          <li><a href="/account">Account</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+        <h3 class="text-muted">Remote Lab Sensors</h3>
+      </div> <!-- header -->
+      <div class="body">
+        <h1><%= title %></h1>
+      </div> <!-- body -->
+    </div> <!-- container -->
+  </div> <!-- wrap -->
+  <div id="footer">
+    <div class="container">
+      <p>&copy; Aperture-Mesa 2013</p>
+    </div> <!-- container -->
+  </div> <!-- footer -->
 
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>

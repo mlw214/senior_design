@@ -37,8 +37,8 @@ io.configure(function () {
       parsedCookie = cookie.parse(handshakeData.headers.cookie);
       sessionID = connect.utils.
                         parseSignedCookie(parsedCookie['connect.sid'], 
-                                          'your secret here'
-                                          );
+                          'your secret here'
+      );
       if (!sessionID) {
         return cb('Cookie is invalid', false);
       }
@@ -51,8 +51,8 @@ io.configure(function () {
         User.findById(session.uid, function (err, doc) {
           if (err) if (err) return cb('500 Internal Server Error', false);
           if (doc) {
-            handshakeData.uid = sessionID.uid;
-            handshakeData.user = doc;
+            handshakeData.sid = sessionID;
+            handshakeData.uid = doc.id;
             return cb(null, true);
           } else {
             cb('Unauthorized', false);
@@ -77,7 +77,8 @@ app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.session({
   store: sessionStore,
-  secret: 'your secret here'
+  secret: 'your secret here',
+  cookie: { maxAge: 60 * 60 * 1000 }
 }));
 app.use(messages());
 app.use(app.router);
@@ -89,24 +90,29 @@ if ('development' == app.get('env')) {
 }
 
 // Routing.
-app.get('/', auth(true), loadUser(), routes.index);
+app.get('/', auth(true), routes.index);
 app.get('/login', auth(false), login.form);
 app.post('/login', login.submit);
 app.get('/register', register.form);
 app.post('/register', 
-          verify.fieldsNotEmpty(),
-          verify.userNotTaken(),
-          verify.passwordsEqual(),
-          verify.checkPasswordRules('minlen 8|maxlen 50'),
-          register.submit
-        );
-app.get('/device', auth(true), loadUser(), device.page);
-app.get('/archive', auth(true), loadUser(), archive.page);
-app.get('/account', auth(true), loadUser(), account.edit);
+  verify.fieldsNotEmpty(),
+  verify.userNotTaken(),
+  verify.passwordsEqual(),
+  verify.checkPasswordRules('minlen 8|maxlen 50'),
+  register.submit
+);
+app.get('/device', auth(true), device.page);
+app.get('/archive', auth(true), archive.page);
+app.get('/account', auth(true), account.edit);
+app.post('/account/username', auth(true), account.changeUsername);
+app.post('/account/password', auth(true), account.changePassword);
 app.get('/logout', login.logout);
 
 // Socket.io connection handling.
 io.on('connection', function (socket) {
+  // Subscribe to rooms. Two are available: alerts and all
+  // The alerts room receives server alerts (i.e., experiment start)
+  // The all room receives everything the alerts room does, plus Arduino data.
   socket.on('subscribe', function (room) {
     socket.join(room);
   });

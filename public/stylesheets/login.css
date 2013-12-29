@@ -3,9 +3,13 @@ body {
   padding-bottom: 20px;
 }
 
+.container h1 {
+	text-align: center;
+}
+
 .form-signin,
 .container .alert {
-  max-width: 380px;
+  max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
