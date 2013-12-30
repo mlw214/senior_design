@@ -18,7 +18,6 @@
       <div class="header">
         <ul class="nav nav-pills pull-right">
           <li><a href="/">Experiment</a></li>
-          <li><a href="/device">Device</a></li>
           <li><a href="/archive">Archive</a></li>
           <li class="active"><a href="/account">Account</a></li>
           <li><a href="/logout">Logout</a></li>
@@ -29,7 +28,7 @@
       <div class="ajax-alerts"></div>
       <div class="body">
         <form class="form" role="form" id="user-form" 
-          action="/account/username" method="post">
+          action="/account/update/username" method="post">
           <h3>Change username</h3>
           <input type="text" class="form-control form-group" 
             placeholder="New username" name="user[name]" 
@@ -43,7 +42,7 @@
           </button>
         </form>
         <form class="form" role="form" id="pass-form"
-          action="/account/password" method="post">
+          action="/account/update/password" method="post">
           <h3>Change password</h3>
           <input type="password" class="form-control form-group" 
             placeholder="Current password" name="user[pass]" 
@@ -65,7 +64,7 @@
   </div> <!-- wrap -->
   <div id="footer">
     <div class="container">
-      <p>&copy; Aperture-Mesa 2013</p>
+      <p>&copy; <%= company %></p>
     </div> <!-- container -->
   </div> <!-- footer -->
 

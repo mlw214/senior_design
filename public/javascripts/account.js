@@ -23,7 +23,7 @@ var account = (function ($, io) {
         }
     }
 
-    function addSocketAlert(alert, dismissable, message) {
+    function addSocketAlert(alert, message) {
 
     }
 
@@ -32,7 +32,7 @@ var account = (function ($, io) {
         socket.emit('subscribe', 'alerts');
     });
     socket.on('alert', function (alert, message) {
-        addSocketAlert(alert, false, message);
+        addSocketAlert(alert, message);
     });
     $('#user-form').submit(function (event) {
         var form = $(this);

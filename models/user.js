@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
-mongoose.connect('mongodb://localhost/lab');
+var Experiment = require('./experiment');
 
 var userSchema = new mongoose.Schema({
   username: { type: String, index: true },
-  password: String
+  password: String,
+  experiments: [Experiment]
 });
 
 userSchema.statics.authenticate = function (name, pass, fn) {

@@ -10,6 +10,7 @@ var register = require('./routes/register');
 var device = require('./routes/device');
 var archive = require('./routes/archive');
 var account = require('./routes/account');
+var experiment = require('./routes/experiment');
 var auth = require('./lib/middleware/authenticate');
 var loadUser = require('./lib/middleware/loaduser');
 var verify = require('./lib/middleware/verification');
@@ -18,15 +19,17 @@ var http = require('http');
 var path = require('path');
 var sio = require('socket.io');
 var connect = require('connect');
-var MemoryStore = express.session.MemoryStore;
 var cookie = require('cookie');
+var mongoose = require('mongoose');
 var User = require('./models/user');
+var MemoryStore = express.session.MemoryStore;
 
 // Create Express app, HTTP server, Socket.io, and session store.
 var app = express();
 var server = http.createServer(app);
 var io = sio.listen(server);
 var sessionStore = new MemoryStore();
+mongoose.connect('mongodb://localhost/lab');
 
 // Configure Socket.io
 io.configure(function () {
@@ -101,12 +104,20 @@ app.post('/register',
   verify.checkPasswordRules('minlen 8|maxlen 50'),
   register.submit
 );
-app.get('/device', auth(true), device.page);
+//app.get('/device', auth(true), device.page);
 app.get('/archive', auth(true), archive.page);
 app.get('/account', auth(true), account.edit);
-app.post('/account/username', auth(true), account.changeUsername);
-app.post('/account/password', auth(true), account.changePassword);
+app.post('/account/update/username', auth(true), account.changeUsername);
+app.post('/account/update/password', auth(true), account.changePassword);
 app.get('/logout', login.logout);
+
+// RESTful services.
+app.get('/experiment', auth(true), experiment.readAll);
+app.get('/experiment/:id', auth(true), experiment.read);
+app.post('/experiment', auth(true), experiment.create);
+app.put('/experiment/:id', auth(true), experiment.update);
+app.delete('/experiment/:id', auth(true), experiment.delete);
+app.get('/experiment/:id/download', auth(true), experiment.download);
 
 // Socket.io connection handling.
 io.on('connection', function (socket) {

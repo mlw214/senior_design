@@ -2,7 +2,10 @@ var User = require('../models/user');
 var bcrypt = require('bcrypt');
 
 exports.edit = function (req, res) {
-  res.render('account', { title: 'Account Info' });
+  res.render('account', {
+    title: 'Account Info',
+    company: 'Aperture-Mesa 2013'
+  });
 };
 
 exports.changeUsername = function (req, res) {
