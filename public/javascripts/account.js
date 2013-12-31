@@ -28,9 +28,6 @@ var account = (function ($, io) {
     }
 
     var socket = io.connect('http://localhost:3000/');
-    socket.on('connect', function () {
-        socket.emit('subscribe', 'alerts');
-    });
     socket.on('alert', function (alert, message) {
         addSocketAlert(alert, message);
     });
@@ -70,4 +67,4 @@ var account = (function ($, io) {
     return {
         socket: socket
     };
-}(jQuery, io));
+}());

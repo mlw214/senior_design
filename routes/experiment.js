@@ -12,7 +12,11 @@ exports.read = function (req, res, next) {
 };
 
 exports.readAll = function (req, res) {
-  res.send();
+  var uid = req.session.uid;
+  User.findById(uid, function (err, user) {
+    if (err || !user) return next(err);
+    res.send(200, user.experiments);
+  });
 };
 
 exports.create = function (req, res) {
@@ -23,7 +27,8 @@ exports.create = function (req, res) {
     user.experiments.push(exp);
     user.save(function (err, prod, num) {
       if (err) return next(err);
-      res.send(200, prod.experiments[0]);
+      console.log(prod);
+      res.send(200, prod.experiments[prod.experiments.length-1]);
     });
   });
 };
@@ -70,6 +75,6 @@ exports.download = function (req, res) {
     if (err || !user) return next(err);
     var doc = user.experiments.id(id);
     if (!doc) return res.send(404, 'Experiment not found');
-    res.sendfile(doc.path);
+    res.download(doc.path);
   });
 }

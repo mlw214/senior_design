@@ -4,23 +4,25 @@ var experimentSchema = new mongoose.Schema({
   name: { type: String, index: true },
   start: { type: Date, default: Date.now },
   stop: { type: Date, default: null },
+  cancelled: Boolean,
   settings: {
     rate: Number,
     email: String,
     phone: Number
   },
-  bounds: {
-    camera: {
-      color: String,
-      auto: Boolean
-    },
-    sensors: [{
-      name: String,
-      lower: Number,
-      upper: Number,
-      auto: Boolean
-    }]
+  description: { type: String, default: '' },
+  camera: {
+    on: Boolean,
+    bound: String,
+    auto: Boolean,
   },
+  sensors: [{
+    type: String,
+    used: Boolean,
+    lower: Number,
+    upper: Number,
+    auto: Boolean
+  }],
   path: String
 });
 

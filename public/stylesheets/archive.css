@@ -1,6 +1,3 @@
-@media (min-width: 768px) {
-  .row-centered {
-  	max-width: 600px;
-  	margin: 0 auto;
-  }
+.body .glyphicon-remove {
+	color: red;
 }
