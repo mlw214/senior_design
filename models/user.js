@@ -5,6 +5,11 @@ var Experiment = require('./experiment');
 var userSchema = new mongoose.Schema({
   username: { type: String, index: true },
   password: String,
+  contact: {
+    email: { type: String, default: null },
+    cellphone: { type: Number, default: null },
+    carrier: { type: String, default: null }
+  },
   experiments: [Experiment]
 });
 

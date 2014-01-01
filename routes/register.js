@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var fs = require('fs');
 
 exports.form = function (req, res) {
   res.render('register', { 

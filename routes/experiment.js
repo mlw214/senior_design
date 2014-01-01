@@ -27,7 +27,6 @@ exports.create = function (req, res) {
     user.experiments.push(exp);
     user.save(function (err, prod, num) {
       if (err) return next(err);
-      console.log(prod);
       res.send(200, prod.experiments[prod.experiments.length-1]);
     });
   });

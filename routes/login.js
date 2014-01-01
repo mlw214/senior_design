@@ -10,6 +10,7 @@ exports.submit = function (req, res, next) {
     if (err) return next(err);
     if (user) {
       req.session.uid = user.id;
+      req.session.username = user.username;
       res.redirect('/');
     } else {
       res.error('Invalid username or password');

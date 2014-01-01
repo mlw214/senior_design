@@ -87,10 +87,12 @@ var archive = (function () {
     socket.on('alert', function (alert, message) {
         addSocketAlert(alert, message);
     });
+    collection.fetch();
 
 
     return {
         socket: socket,
+        model: ExperimentModel,
         collection: collection,
         collectionView: collectionView
     };
@@ -98,5 +100,4 @@ var archive = (function () {
 
 $(function () {
     $('.body').append(archive.collectionView.el);
-    archive.collection.fetch();
-})
+});

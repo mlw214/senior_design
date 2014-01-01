@@ -1,19 +1,15 @@
-var account = (function ($, io) {
+var account = (function () {
     'use strict';
-    function addAjaxAlert(alert, dismissable, message) {
-        var html = '',
+    function addAjaxAlert(alert, message, self) {
+        var html = '<div class="alert alert-' + alert +
+                        ' alert-dismissable"><button type="button" ' +
+                        'class="close" data-dismiss="alert" aria-hidden=' +
+                        '"true">&times;</button><strong>' + message +
+                        '</strong></div>',
             children;
-        if (dismissable) {
-            html = '<div class="alert alert-' + alert + 
-                ' alert-dismissable"><button type="button" class="close" ' +
-                'data-dismiss="alert" aria-hidden="true">&times;</button> ' +
-                '<strong>' + message + '</strong></div>';
-        } else {
-            html = '<div class="alert alert-' + alert + '>' +
-                '<strong>' + message + '</strong></div>';
-        }
-        $('.ajax-alerts').prepend(html);
-        children = $('.ajax-alerts').children();
+        $(self).parents('.panel-body').find('#ajax-alerts').prepend(html);
+        children = $(self).parents('.panel-body').find('#ajax-alerts').
+            children();
         if (children.length > 1) {
             setTimeout(function () {
                 children.eq(1).fadeOut('slow', function () {
@@ -23,7 +19,7 @@ var account = (function ($, io) {
         }
     }
 
-    function addSocketAlert(alert, message) {
+    function addSocketAlert(alert, message, self) {
 
     }
 
@@ -31,21 +27,47 @@ var account = (function ($, io) {
     socket.on('alert', function (alert, message) {
         addSocketAlert(alert, message);
     });
-    $('#user-form').submit(function (event) {
+    return {
+        socket: socket,
+        addAjaxAlert: addAjaxAlert,
+        addSocketAlert: addSocketAlert
+    };
+}());
+
+$(function () {
+    'use strict';
+    $('#contact-form').submit(function (event) {
         var form = $(this);
         $.ajax({
             type: form.attr('method'),
             url: form.attr('action'),
             data: form.serialize()
         }).done(function () {
-            addAjaxAlert('success', true, 'Username successfully changed!');
+            account.addAjaxAlert('success', 'Contact information ' +
+                'sucessfully changed!', form);
+        }).fail(function (jqXHR) {
+            account.addAjaxAlert('danger', 'Failed to update contact ' +
+                'information - ' + jqXHR.responseText, form);
+        });
+        event.preventDefault();
+    });
+    $('#user-form').submit(function (event) {
+        var form = $(this);
+        $.ajax({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize()
+        }).done(function (jqXHR) {
+            account.addAjaxAlert('success', 'Username successfully changed!',
+                form
+                );
             form.each(function () {
                 this.reset();
             });
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            addAjaxAlert('danger', true, 'Failed to update username - ' + 
-                jqXHR.responseText
-            );
+            $('h2 small').text('for ' + jqXHR);
+        }).fail(function (jqXHR) {
+            account.addAjaxAlert('danger', 'Failed to update username - ' +
+                jqXHR.responseText, form);
         });
         event.preventDefault();
     });
@@ -56,15 +78,15 @@ var account = (function ($, io) {
             url: form.attr('action'),
             data: form.serialize()
         }).done(function () {
-            addAjaxAlert('success', true, 'Password successfully changed!');
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            addAjaxAlert('danger', true, 'Failed to update password - ' +
-                jqXHR.responseText
-            );
+            account.addAjaxAlert('success', 'Password successfully changed!',
+                form);
+            form.each(function () {
+                this.reset();
+            });
+        }).fail(function (jqXHR) {
+            account.addAjaxAlert('danger', 'Failed to update password - ' +
+                jqXHR.responseText, form);
         });
         event.preventDefault();
-    })
-    return {
-        socket: socket
-    };
-}());
+    });
+});

@@ -101,14 +101,20 @@ app.post('/register',
   verify.fieldsNotEmpty(),
   verify.userNotTaken(),
   verify.passwordsEqual(),
-  verify.checkPasswordRules('minlen 8|maxlen 50'),
+  verify.checkAgainstRules('minlen 8|maxlen 50'),
   register.submit
 );
 //app.get('/device', auth(true), device.page);
 app.get('/archive', auth(true), archive.page);
-app.get('/account', auth(true), account.edit);
+app.get('/account', auth(true), loadUser(), account.edit);
+app.post('/account/update/contact', 
+  auth(true),
+  verify.isValidEmail(),
+  verify.checkCellInfo(),
+  account.updateContactInfo);
 app.post('/account/update/username', auth(true), account.changeUsername);
 app.post('/account/update/password', auth(true), account.changePassword);
+app.post('/account/update/delete', auth(true), account.deleteAccount);
 app.get('/logout', login.logout);
 
 // RESTful services.
@@ -121,9 +127,6 @@ app.get('/experiment/:id/download', auth(true), experiment.download);
 
 // Socket.io connection handling.
 io.on('connection', function (socket) {
-  // Subscribe to rooms. Two are available: alerts and all
-  // The alerts room receives server alerts (i.e., experiment start)
-  // The all room receives everything the alerts room does, plus Arduino data.
   socket.on('subscribe', function (room) {
     socket.join(room);
   });
