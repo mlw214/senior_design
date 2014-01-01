@@ -2,33 +2,38 @@
 /**
  * Module dependencies.
  */
-
-var express = require('express');
-var routes = require('./routes');
-var login = require('./routes/login');
-var register = require('./routes/register');
-var device = require('./routes/device');
-var archive = require('./routes/archive');
-var account = require('./routes/account');
-var experiment = require('./routes/experiment');
-var auth = require('./lib/middleware/authenticate');
-var loadUser = require('./lib/middleware/loaduser');
-var verify = require('./lib/middleware/verification');
-var messages = require('./lib/middleware/messages');
-var http = require('http');
-var path = require('path');
-var sio = require('socket.io');
-var connect = require('connect');
-var cookie = require('cookie');
-var mongoose = require('mongoose');
-var User = require('./models/user');
-var MemoryStore = express.session.MemoryStore;
+// Base modules.
+var express = require('express'),
+    http = require('http'),
+    path = require('path'),
+    sio = require('socket.io'),
+    connect = require('connect'),
+    cookie = require('cookie'),
+    mongoose = require('mongoose'),
+// Routing modules.
+    routes = require('./routes'),
+    login = require('./routes/login'),
+    register = require('./routes/register'),
+    device = require('./routes/device'),
+    archive = require('./routes/archive'),
+    account = require('./routes/account'),
+    experiment = require('./routes/experiment'),
+// Middleware modules.
+    auth = require('./lib/middleware/authenticate'),
+    loadUser = require('./lib/middleware/loaduser'),
+    verify = require('./lib/middleware/verification'),
+    messages = require('./lib/middleware/messages'),
+// Other.
+    spawn = require('child_process').spawn,
+    User = require('./models/user'),
+    MemoryStore = express.session.MemoryStore,
+    proc;
 
 // Create Express app, HTTP server, Socket.io, and session store.
-var app = express();
-var server = http.createServer(app);
-var io = sio.listen(server);
-var sessionStore = new MemoryStore();
+var app = express(),
+    server = http.createServer(app),
+    io = sio.listen(server),
+    sessionStore = new MemoryStore();
 mongoose.connect('mongodb://localhost/lab');
 
 // Configure Socket.io
@@ -102,8 +107,7 @@ app.post('/register',
   verify.userNotTaken(),
   verify.passwordsEqual(),
   verify.checkAgainstRules('minlen 8|maxlen 50'),
-  register.submit
-);
+  register.submit);
 //app.get('/device', auth(true), device.page);
 app.get('/archive', auth(true), archive.page);
 app.get('/account', auth(true), loadUser(), account.edit);
@@ -133,6 +137,14 @@ io.on('connection', function (socket) {
 });
 
 // Arduino services.
+proc = spawn(__dirname + '/lib/c++/arduino');
+proc.stdout.on('data', function (data) {
+  var values = data.toString().trim().split(' ');
+  io.sockets.in('data').emit('data', { 
+    sensor1: values[0],
+    sensor2: values[1] 
+  });
+});
 
 
 // All setup, time to listen!

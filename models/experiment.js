@@ -5,11 +5,8 @@ var experimentSchema = new mongoose.Schema({
   start: { type: Date, default: Date.now },
   stop: { type: Date, default: null },
   cancelled: Boolean,
-  settings: {
-    rate: Number,
-    email: String,
-    phone: Number
-  },
+  rate: Number,
+  contact: String,
   description: { type: String, default: '' },
   camera: {
     on: Boolean,

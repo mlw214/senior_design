@@ -25,23 +25,72 @@
         <h3 class="text-muted">Remote Lab Sensors</h3>
       </div> <!-- header -->
       <div class="body">
-        <h2>Experiment View</h2>
-        <div class="panel-group" id="accordion">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" 
-                  href="#collapseOne">
-                Experiment Setup
-                </a>
-              </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in">
-              <div class="panel-body">
-              </div>
-            </div>
+        <h2>Run an Experiment</h2>
+        <div class="panel panel-default" id="accordion">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion"
+                href="#form-panel">
+              Experiment Setup
+              </a>
+            </h4>
+          </div>
+          <!-- Need experiment name, period, description, contact -->
+          <div id="form-panel" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <form role="form">
+                <div class="form-group">
+                  <label for="name" class="control-label">
+                  Experiment Name
+                  </label>
+                  <input type="text" class="form-control" id="name"
+                    placeholder="Awesome Name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="period" class="control-label">
+                  Collection Rate (seconds)
+                  </label>
+                  <input type="number" class="form-control" id="peroid"
+                    value="1" name="speed" min="1" required>
+                  <span class="help-block">
+                    <small>
+                    How often experiment data will be written to file.
+                    </small>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label for="description" class="control-label">
+                  Description (optional)
+                  </label>
+                  <textarea class="form-control" name="description"></textarea>
+                </div>
+                <label class="control-label">
+                Alert Contact Method
+                </label>
+                <div class="form-group">
+                  <label class="radio-inline">
+                    <input type="radio" value="none" name="contact" checked>
+                    None
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" value="email" name="contact">
+                    Email
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" value="text" name="contact">
+                    Text
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" value="both" name="contact">
+                    Both
+                  </label>
+                </div>
+              </form>
+            </div> 
           </div>
         </div>
+        <p>Sensor 1: <span id="sensor1"></span></p>
+        <p>Sensor 2: <span id="sensor2"></span></p>
       </div> <!-- body -->
     </div> <!-- container -->
   </div> <!-- wrap -->
@@ -53,5 +102,7 @@
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/javascripts/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/index.js"></script>
 </body>
 </html>
