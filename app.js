@@ -22,7 +22,6 @@ var express = require('express'),
     auth = require('./lib/middleware/authenticate'),
     loadUser = require('./lib/middleware/loaduser'),
     verify = require('./lib/middleware/verification'),
-    messages = require('./lib/middleware/messages'),
 // Other.
     spawn = require('child_process').spawn,
     User = require('./models/user'),
@@ -88,7 +87,6 @@ app.use(express.session({
   secret: 'your secret here',
   cookie: { maxAge: 60 * 60 * 1000 }
 }));
-app.use(messages());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,7 +104,7 @@ app.post('/register',
   verify.fieldsNotEmpty(),
   verify.userNotTaken(),
   verify.passwordsEqual(),
-  verify.checkAgainstRules('minlen 8|maxlen 50'),
+  verify.checkAgainstRules('minlen 8'),
   register.submit);
 //app.get('/device', auth(true), device.page);
 app.get('/archive', auth(true), archive.page);

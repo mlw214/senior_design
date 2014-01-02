@@ -1,20 +1,23 @@
 var User = require('../models/user');
 
 exports.form = function (req, res) {
-  res.render('login', { title: 'Login' });
+  res.render('login', {
+    title: 'Login',
+    company: 'Aperture-Mesa 2014'
+  });
 };
 
 exports.submit = function (req, res, next) {
   var data = req.body.user;
+  console.log(data);
   User.authenticate(data.name, data.pass, function (err, user) {
     if (err) return next(err);
     if (user) {
       req.session.uid = user.id;
       req.session.username = user.username;
-      res.redirect('/');
+      res.send();
     } else {
-      res.error('Invalid username or password');
-      res.redirect('back');
+      res.send(401, 'Invalid username or password');
     }
   });
 };

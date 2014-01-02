@@ -7,45 +7,77 @@
   <title><%= title %></title>
 
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
   <link rel="stylesheet" href="/stylesheets/register.css" />
 </head>
 <body>
 
-  <div class="container">
-    <h1>Remote Lab Sensors</h1>
-    <form class="form-register" role="form" action="/register" method="post">
-      <h2 class="form-register-heading">Create Account</h2>
-      <input type="text" class="form-control form-group" 
-        placeholder="Username" name="user[name]" id="uname" required autofocus>
-      <input type="password" class="form-control form-group" 
-        placeholder="Password" name="user[pass]" id="pw1" required>
-      <input type="password" class="form-control form-group" 
-        placeholder="Confirm" name="user[confirm]" id="pw2" required>
-      <p>
-        <small>
-        Password must be between <%= minlen %> and <%= maxlen %> characters.
-        </small>
-      </p>
-      <input type="text" class="form-control form-group" 
-        placeholder="Device ID" name="id" id="device" required>
-      <p>
-        <small>
-        Provided with hardware.
-        </small>
-      </p>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        Create
-      </button>
-      <a href="/login">Have an account? Click here</a>
-
-    </form>
-
-    <% include partials/messages %>
-
-
-  </div> <!-- /container -->
+  <div id="wrap">
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="/login">Login</a></li>
+          <li class="active"><a href="/register">Register</a></li>
+        </ul>
+        <h3 class="text-muted">Remote Lab Sensors</h3>
+      </div> <!-- header -->
+      <div id="body">
+        <h1 class="text-center">Create an Account</h1>
+        <div id="ajax-alerts"></div>
+        <form role="form" method="post" action="/register">
+          <div class="form-group">
+            <label for="username" class="control-label">
+            Username
+            </label>
+            <input type="text" class="form-control" id="username"
+              name="user[name]" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="password" class="control-label">
+            Password
+            </label>
+            <input type="password" class="form-control" id="password"
+              name="user[pass]" required>
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="confirm">
+            Confirm Password
+            </label>
+            <input type="password" class="form-control" id="confirm"
+              name="user[confirm]" required>
+            <span class="help-block">
+              <small>
+              Password must be at least <%= minlen %> characters long.
+              </small>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="device-id">
+            Device ID
+            </label>
+            <input type="text" class="form-control" name="id"
+              id="device-id" required>
+            <span class="help-block">
+              <small>
+              Provided with hardware.
+              </small>
+            </span>
+          </div>
+          <button class="btn btn-lg btn-primary form-group" type="submit">
+          Create
+          </button>
+        </form>
+      </div> <!-- body -->
+    </div> <!-- container -->
+  </div> <!-- wrap -->
+  <div id="footer">
+    <div class="container">
+      <p>&copy; <%= company %></p>
+    </div> <!-- container -->
+  </div> <!-- footer -->
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/javascripts/bootstrap.min.js"></script>
+  <script src="/javascripts/register.js"></script>
 </body>
 </html>

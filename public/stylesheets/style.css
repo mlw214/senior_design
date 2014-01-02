@@ -18,8 +18,8 @@ body {
 .header,
 .body,
 #footer {
-	padding-left: 15px;
-	padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .header {
@@ -28,9 +28,9 @@ body {
 
 .header h3 {
   margin-top: 0;
-	margin-bottom: 0;
-	line-height: 40px;
-	padding-bottom: 19px;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
 }
 
 #footer {

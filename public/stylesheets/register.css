@@ -1,29 +1,7 @@
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.container h1 {
-	text-align: center;
-}
-
-.form-register,
-.container .alert {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-
-.form-register .form-register-heading,
-.form-register .btn {
-  margin-bottom: 10px;
-}
-
-.form-register .form-control:focus {
-  z-index: 2;
-}
-
-.form-register #pw2,
-.form-register #device {
-  margin-bottom: 0;
+@media (min-width: 768px) {
+  form,
+  .alert {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }

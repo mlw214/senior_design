@@ -6,6 +6,6 @@
 exports.index = function(req, res){
   res.render('index', {
   	title: 'Experiment',
-  	company: 'Aperture-Mesa 2013'
+  	company: 'Aperture-Mesa 2014'
   });
 };

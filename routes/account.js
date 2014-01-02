@@ -11,7 +11,7 @@ exports.edit = function (req, res) {
       { name: 'T-Mobile', ext: 'blah' },
       { name: 'Sprint', ext: 'blah' }
     ],
-    company: 'Aperture-Mesa 2013'
+    company: 'Aperture-Mesa 2014'
   });
 };
 
@@ -26,8 +26,8 @@ exports.changeUsername = function (req, res, next) {
             if (err) return next(err);
             if (exists) {
               if (user.username === exists.username)
-                return res.send(400, 'You\'re using that username!');
-              return res.send(400, 'Username already in use!');
+                return res.send(400, 'You\'re using that username');
+              return res.send(400, 'Username already in use');
             }
             user.username = data.newName;
             user.save(function (err, prod, num) {
@@ -37,11 +37,11 @@ exports.changeUsername = function (req, res, next) {
             });
           });
         } else {
-          res.send(401, 'Invalid password!');
+          res.send(401, 'Invalid password');
         }
       });
     } else {
-      res.send(500, 'Internal server error!');
+      res.send(500, 'Internal server error');
     }
   });
 };
@@ -55,10 +55,10 @@ exports.changePassword = function (req, res, next) {
         if (err) return next(err);
         if (ok) {
           if (data.newPass !== data.newConfirm)
-            return res.send(400, 'New passwords must match!')
-          if (data.newPass.length < 8 || data.newPass.length > 50)
+            return res.send(400, 'New passwords must match')
+          if (data.newPass.length < 8)
             return res.send(400, 
-              'Passwords must between 8 and 50 characters long!'
+              'Passwords must be at least 8 characters long'
             );
           bcrypt.genSalt(12, function (err, salt) {
             if (err) return next(err);
@@ -72,11 +72,11 @@ exports.changePassword = function (req, res, next) {
             });
           });
         } else {
-          res.send(401, 'Invalid password!');
+          res.send(401, 'Invalid password');
         }
       });
     } else {
-      res.send(500, 'Internal server error!');
+      res.send(500, 'Internal server error');
     }
   })
 };
@@ -96,7 +96,7 @@ exports.updateContactInfo = function (req, res, next) {
         res.send(200, user.contact);
       });
     } else {
-      res.send(500, 'Internal server error!');
+      res.send(500, 'Internal server error');
     }
   });
 };

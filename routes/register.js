@@ -5,7 +5,7 @@ exports.form = function (req, res) {
   res.render('register', { 
   	title: 'Register',
   	minlen: 8,
-  	maxlen: 50
+  	company: 'Aperture-Mesa 2014'
   });
 };
 
@@ -15,7 +15,7 @@ exports.submit = function (req, res, next) {
     if (err) return next(err);
     user.save(function (err, prod, num) {
       if (err) return next(err);
-      res.redirect('/');
+      res.send();
     });
   });
 };

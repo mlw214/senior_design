@@ -7,32 +7,58 @@
   <title><%= title %></title>
 
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
   <link rel="stylesheet" href="/stylesheets/login.css" />
 </head>
 <body>
-
-  <div class="container">
-    <h1>Remote Lab Sensors</h1>
-    <form class="form-signin" role="form" action="/login" method="post">
-      <h2 class="form-signin-heading">Please login</h2>
-      <input type="text" class="form-control form-group" 
-        placeholder="Username" name="user[name]" required autofocus>
-      <input type="password" class="form-control form-group" 
-        placeholder="Password" name="user[pass]" required>
-      <label class="checkbox form-group">
-        <input type="checkbox" value="remember-me" name="stay"> Remember me
-      </label>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        Sign in
-      </button>
-      <a href="/register">Need an account? Click here</a>
-    </form>
-
-    <% include partials/messages %>
-
-  </div> <!-- /container -->
+  <div id="wrap">
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+        </ul>
+        <h3 class="text-muted">Remote Lab Sensors</h3>
+      </div> <!-- header -->
+      <div id="body">
+        <h1 class="text-center">Please Login</h1>
+        <div id="ajax-alerts"></div>
+        <form role="form" method="post" action="/login">
+          <div class="form-group">
+            <label for="username" class="control-label">
+            Username
+            </label>
+            <input type="text" class="form-control" id="username"
+              name="user[name]" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="password" class="control-label">
+            Password
+            </label>
+            <input type="password" class="form-control" id="password"
+              name="user[pass]" required>
+          </div>
+          <div class="form-group">
+            <label class="checkbox">
+              <input type="checkbox" value="remember-me" name="stay">
+              Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary form-group" type="submit">
+          Login
+          </button>
+        </form>
+      </div> <!-- body -->
+    </div> <!-- container -->
+  </div> <!-- wrap -->
+  <div id="footer">
+    <div class="container">
+      <p>&copy; <%= company %></p>
+    </div> <!-- container -->
+  </div> <!-- footer -->
 
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/javascripts/bootstrap.min.js"></script>
+  <script src="/javascripts/login.js"></script>
 </body>
 </html>
