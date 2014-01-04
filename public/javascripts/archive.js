@@ -72,7 +72,7 @@ var archive = (function () {
                 this.$el.append(experimentView.render().el);
             },
             addAll: function () {
-                this.$el.children().empty();
+                this.$el.empty();
                 this.collection.forEach(this.addOne, this);
             },
             render: function () {
@@ -93,11 +93,12 @@ var archive = (function () {
     return {
         socket: socket,
         model: ExperimentModel,
+        view: ExperimentView,
         collection: collection,
         collectionView: collectionView
     };
 }());
 
 $(function () {
-    $('.body').append(archive.collectionView.el);
+    $('#experiments').html(archive.collectionView.el);
 });

@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title><%= title %></title>
@@ -85,12 +86,75 @@
                     Both
                   </label>
                 </div>
+                <p>Configure sensors down below, and then press start.</p>
               </form>
             </div> 
           </div>
         </div>
-        <p>Sensor 1: <span id="sensor1"></span></p>
-        <p>Sensor 2: <span id="sensor2"></span></p>
+        <div class="row">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="btn-group btn-group-lg">
+              <button class="btn btn-primary">Start</button>
+              <button class="btn btn-danger">Stop</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="text-right">
+              <div class="btn-group btn-group-lg">
+                <button class="btn btn-primary">Relay On</button>
+                <button class="btn btn-danger">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sensors">
+          <h2>Sensors</h2>
+          <div class="row" id="row-one">
+            <div class="col-md-5">
+              <p>Liquid Temperature Sensor</p>
+            </div>
+            <div class="col-md-1">
+              <p class="text-left"><strong id="liquid"></strong></p>
+            </div>
+            <div class="col-md-1">
+              <p>&deg;C</p>
+            </div>
+            <div clss="col-md-5">
+              <div class="text-right">
+                <button class="btn btn-primary btn-xs text">Configure</button>
+              </div>
+            </div>
+          </div>
+          <div class="row" id="row-two">
+            <div class="col-md-5">
+              <p>Gas Temperature Sensor</p>
+            </div>
+            <div class="col-md-1">
+              <p class="text-left"><strong id="gas"></strong></p>
+            </div>
+            <div class="col-md-1">
+              <p>&deg;C</p>
+            </div>
+            <div clss="col-md-5">
+              <div class="text-right">
+                <button class="btn btn-primary btn-xs text">Configure</button>
+              </div>
+            </div>
+          </div>
+          <div class="row" id="row-three">
+            <div class="col-md-5">
+              <p>Camera Color Dectection</p>
+            </div>
+            <div class="col-md-2">
+              <p class="text-left"><strong>black</strong></p>
+            </div>
+            <div clss="col-md-5">
+              <div class="text-right">
+                <button class="btn btn-primary btn-xs text">Configure</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div> <!-- body -->
     </div> <!-- container -->
   </div> <!-- wrap -->

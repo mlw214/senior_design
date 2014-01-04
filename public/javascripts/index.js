@@ -4,8 +4,8 @@ var index = (function () {
         socket.emit('subscribe', 'data');
     });
     socket.on('data', function (data) {
-        $('p #sensor1').html(data.sensor1);
-        $('p #sensor2').html(data.sensor2);
+        $('#liquid').html(data.sensor1);
+        $('#gas').html(data.sensor2);
     });
     return {
         socket: socket

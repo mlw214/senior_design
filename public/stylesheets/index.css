@@ -1,3 +1,17 @@
 .body h2 {
   margin-bottom: 30px;
 }
+
+.sensors p {
+  font-size: 18px;
+}
+
+#row-one,
+#row-two {
+  border-bottom: 1px solid #e5e5e5
+}
+
+#row-two,
+#row-three {
+  margin-top: 10px;
+}
