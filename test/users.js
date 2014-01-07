@@ -23,12 +23,8 @@ mongoose.connect('mongodb://localhost/lab');
   }
 });*/
 
-User.findOne({ username: 'bob' }, function (err, user) {
+User.findOne({ _id: "52c37bb396d1501f98000002", 'experiments.name': 'Bob'},
+  function (err, user) {
   if (err || !user) return console.log(err);
-  var doc = user.experiments.id('52c0ddde33fbaa3987000004');
-  doc['path'] = 'blahblah';
-  user.save(function (err, prod, num) {
-    if (err) return console.log(err);
-    console.log(prod);
-  });
+  console.log(user);
 })

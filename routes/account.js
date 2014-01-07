@@ -1,5 +1,6 @@
-var User = require('../models/user');
-var bcrypt = require('bcrypt');
+var User = require('../models/user'),
+    bcrypt = require('bcrypt'),
+    fs = require('fs');
 
 exports.edit = function (req, res) {
   res.render('account', {
@@ -12,37 +13,6 @@ exports.edit = function (req, res) {
       { name: 'Sprint', ext: 'blah' }
     ],
     company: 'Aperture-Mesa 2014'
-  });
-};
-
-exports.changeUsername = function (req, res, next) {
-  var data = req.body.user;
-  User.findById(req.session.uid, function (err, user) {
-    if (user) {
-      bcrypt.compare(data.pass, user.password, function (err, ok) {
-        if (err) return next(err);
-        if (ok) {
-          User.findOne({ username: data.newName }, function (err, exists) {
-            if (err) return next(err);
-            if (exists) {
-              if (user.username === exists.username)
-                return res.send(400, 'You\'re using that username');
-              return res.send(400, 'Username already in use');
-            }
-            user.username = data.newName;
-            user.save(function (err, prod, num) {
-              if (err) return next(err);
-              req.session.username = user.username;
-              res.send(200, user.username);
-            });
-          });
-        } else {
-          res.send(401, 'Invalid password');
-        }
-      });
-    } else {
-      res.send(500, 'Internal server error');
-    }
   });
 };
 

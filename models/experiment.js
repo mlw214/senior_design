@@ -9,17 +9,11 @@ var experimentSchema = new mongoose.Schema({
   contact: String,
   description: { type: String, default: '' },
   camera: {
-    on: Boolean,
+    used: Boolean,
     bound: String,
     auto: Boolean,
   },
-  sensors: [{
-    type: String,
-    used: Boolean,
-    lower: Number,
-    upper: Number,
-    auto: Boolean
-  }],
+  sensors: Object,
   path: String
 });
 

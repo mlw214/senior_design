@@ -1,14 +1,3 @@
-var login = (function () {
-    function addAjaxAlert(message) {
-        var html = '<div class="alert alert-danger">' + message + '</div>';
-        $('#ajax-alerts').html(html);
-    }
-
-    return {
-        addAlert: addAjaxAlert
-    };
-}());
-
 $(function () {
     'use strict';
     $('form').submit(function (event) {
@@ -20,7 +9,9 @@ $(function () {
         }).done(function () {
             window.location.href = 'http://' + window.location.host;
         }).fail(function (jqXHR) {
-            login.addAlert(jqXHR.responseText);
+            addAlert('danger',
+                jqXHR.responseText,
+                $('#ajax-alerts'));
         });
         event.preventDefault();
     });

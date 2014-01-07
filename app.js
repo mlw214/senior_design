@@ -114,7 +114,6 @@ app.post('/account/update/contact',
   verify.isValidEmail(),
   verify.checkCellInfo(),
   account.updateContactInfo);
-app.post('/account/update/username', auth(true), account.changeUsername);
 app.post('/account/update/password', auth(true), account.changePassword);
 app.post('/account/update/delete', auth(true), account.deleteAccount);
 app.get('/logout', login.logout);
@@ -140,12 +139,12 @@ proc.stdout.on('data', function (data) {
   var values = data.toString().trim().split(' ');
   io.sockets.in('data').emit('data', { 
     sensor1: values[0],
-    sensor2: values[1] 
+    sensor2: values[1]
   });
 });
 
 
 // All setup, time to listen!
-server.listen(app.get('port'), function(){
+server.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });

@@ -1,5 +1,5 @@
-<div class="modal fade" id="color-modal" tabindex="-1" role="dialog" 
-  aria-labelledby="color-modal" aria-hidden="true">
+<div class="modal fade" id="gas-modal" tabindex="-1" role="dialog" 
+  aria-labelledby="gas-modal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,31 +7,28 @@
           aria-hidden="true">
         &times;
         </button>
-        <h4 class="modal-title" id="color-modal">
-        Camera Configuration
+        <h4 class="modal-title" id="gas-modal">
+        Gas Temperature Sensor Configuration
         </h4>
       </div>
       <div class="modal-body">
       <form role="form">
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="used" checked> Monitor Sensor
+            <input type="checkbox" name="used" checked> Record Sensor Data
           </label>
         </div>
         <div class="form-group">
-          <label for="color" class="control-label">
-          Color to Watch for
+          <label for="lower" class="control-label">
+          Lower Bound
           </label>
-          <select id="color" class="form-control" name="bound">
-            <option>Red</option>
-            <option>Blue</option>
-            <option>Green</option>
-            <option>Black</option>
-            <option>White</option>
-            <option>Yellow</option>
-            <option>Indigo</option>
-            <option>Violet</option>
-          </select>
+          <input id="lower" type="number" name="lower" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="upper" class="control-label">
+          Upper Bound
+          </label>
+          <input id="upper" type="number" name="upper" class="form-control">
         </div>
         <div class="checkbox">
           <label>

@@ -1,8 +1,5 @@
 var archive = (function () {
     'use strict';
-    function addSocketAlert(alert, message) {
-
-    }
 
     var socket,
         ExperimentModel = Backbone.Model.extend({
@@ -10,6 +7,9 @@ var archive = (function () {
             urlRoot: '/experiment',
             parse: function (response) {
                 response.start = new Date(response.start);
+                if (response.stop) {
+                    response.stop = new Date(response.stop);
+                }
                 return response;
             }
         }),
@@ -19,15 +19,16 @@ var archive = (function () {
             events: {
                 'click .glyphicon-remove': 'destroy'
             },
-            template: _.template(
+            templateBody: _.template(
+                '<div class="media-body">' +
+                    '<h4 class="media-heading"><%= name %></h4><p>' +
+                    '<%= description %></p><p><small>Started: <%= start %> ' +
+                    'Completed: <%= stop %></small></p></div>'),
+            templateLinks: _.template(
                 '<a class="pull-right" href="/experiment/<%= _id %>/' +
                     'download"><span class="glyphicon glyphicon-save">' +
                     '</span></a><span class="glyphicon glyphicon-remove ' +
-                    'pull-right"></span><div class="media-body">' +
-                    '<h4 class="media-heading"><%= name %></h4><p>' +
-                    '<%= description %></p><p><small>Start: <%= start %> ' +
-                    'Completed: <%= stop %></small></p></div>'
-            ),
+                    'pull-right"></span>'),
             initialize: function () {
                 this.listenTo(this.model, 'change', this.render);
                 this.listenTo(this.model, 'destroy', this.remove);
@@ -37,7 +38,11 @@ var archive = (function () {
                 this.model.destroy();
             },
             render: function () {
-                this.$el.html(this.template(this.model.attributes));
+                this.$el.html(this.templateBody(this.model.attributes));
+                if (this.model.get('stop')) {
+                    this.$el.
+                        prepend(this.templateLinks(this.model.attributes));
+                }
                 return this;
             },
             remove: function () {
@@ -82,18 +87,12 @@ var archive = (function () {
         collection = new ExperimentList(),
         collectionView = new ExperimentListView({ collection: collection });
 
-
     socket = io.connect('http://localhost:3000');
-    socket.on('alert', function (alert, message) {
-        addSocketAlert(alert, message);
-    });
     collection.fetch();
 
 
     return {
         socket: socket,
-        model: ExperimentModel,
-        view: ExperimentView,
         collection: collection,
         collectionView: collectionView
     };

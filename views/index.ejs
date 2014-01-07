@@ -39,7 +39,8 @@
           <!-- Need experiment name, period, description, contact -->
           <div id="form-panel" class="panel-collapse collapse in">
             <div class="panel-body">
-              <form role="form">
+              <div id="ajax-alerts"></div>
+              <form id="main-form" role="form">
                 <div class="form-group">
                   <label for="name" class="control-label">
                   Experiment Name
@@ -94,8 +95,8 @@
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="btn-group btn-group-lg">
-              <button class="btn btn-primary">Start</button>
-              <button class="btn btn-danger">Stop</button>
+              <button id="start" class="btn btn-primary">Start</button>
+              <button id="stop" class="btn btn-danger">Stop</button>
             </div>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
@@ -109,7 +110,7 @@
         </div>
         <div class="sensors">
           <h2>Sensors</h2>
-          <div class="row" id="row-one">
+          <div class="row" id="row-liquid">
             <div class="col-md-5">
               <p>Liquid Temperature Sensor</p>
             </div>
@@ -121,11 +122,13 @@
             </div>
             <div clss="col-md-5">
               <div class="text-right">
-                <button class="btn btn-primary btn-xs text">Configure</button>
+                <button id="liquid-btn" class="btn btn-primary btn-xs text">
+                Configure
+                </button>
               </div>
             </div>
           </div>
-          <div class="row" id="row-two">
+          <div class="row" id="row-gas">
             <div class="col-md-5">
               <p>Gas Temperature Sensor</p>
             </div>
@@ -137,11 +140,13 @@
             </div>
             <div clss="col-md-5">
               <div class="text-right">
-                <button class="btn btn-primary btn-xs text">Configure</button>
+                <button id="gas-btn" class="btn btn-primary btn-xs text">
+                Configure
+                </button>
               </div>
             </div>
           </div>
-          <div class="row" id="row-three">
+          <div class="row" id="row-camera">
             <div class="col-md-5">
               <p>Camera Color Dectection</p>
             </div>
@@ -150,12 +155,17 @@
             </div>
             <div clss="col-md-5">
               <div class="text-right">
-                <button class="btn btn-primary btn-xs text">Configure</button>
+                <button id="camera-btn" class="btn btn-primary btn-xs text">
+                Configure
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div> <!-- body -->
+      <%- include partials/gas-modal %>
+      <%- include partials/liquid-modal %>
+      <%- include partials/color-modal %>
     </div> <!-- container -->
   </div> <!-- wrap -->
   <div id="footer">
@@ -167,6 +177,7 @@
   <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/javascripts/bootstrap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/alerts.js"></script>
   <script src="/javascripts/index.js"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-var User = require('../models/user');
+var User = require('../models/user'),
+    fs = require('fs');
 
 exports.read = function (req, res, next) {
   var id = req.params.id,
@@ -13,7 +14,7 @@ exports.read = function (req, res, next) {
 
 exports.readAll = function (req, res) {
   var uid = req.session.uid;
-  User.findById(uid, function (err, user) {
+  User.findOne(uid, function (err, user) {
     if (err || !user) return next(err);
     res.send(200, user.experiments);
   });
@@ -22,8 +23,12 @@ exports.readAll = function (req, res) {
 exports.create = function (req, res) {
   var exp = req.body,
       uid = req.session.uid;
-  User.findById(uid, function (err, user) {
-    if (err || !user) return next(err);
+  console.log(exp);
+  User.findOne({_id: uid, 'experiments.name': exp.name}, function (err, user) {
+    if (err) return next(err);
+    if (user) return res.send(400, 'Experiment name already taken');
+    exp.path = __dirname + '/../experiment-files/' + user.username + '/' +
+      exp.name;
     user.experiments.push(exp);
     user.save(function (err, prod, num) {
       if (err) return next(err);
