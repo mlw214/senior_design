@@ -4,16 +4,12 @@ var index = (function () {
     socket.on('connect', function () {
         socket.emit('subscribe', 'data');
     });
-    socket.on('status', function (status) {
-        running = status;
-    });
     socket.on('data', function (data) {
-        $('#liquid').html(data.sensor1);
-        $('#gas').html(data.sensor2);
+        $('#liquid').html(data.liquid);
+        $('#gas').html(data.gas);
     });
     return {
-        socket: socket,
-        status: running
+        socket: socket
     };
 }());
 
@@ -22,9 +18,10 @@ $(function () {
     var gasModal = $('#gas-modal'),
         liquidModal = $('#liquid-modal'),
         colorModal = $('#color-modal'),
-        gasStore = {type: 'Gas Temperature Sensor'},
-        liquidStore = {type: 'Liquid Temperature Sensor'},
-        colorStore = {};
+        gasStore = { type: 'Gas Temperature Sensor' },
+        liquidStore = { type: 'Liquid Temperature Sensor' },
+        colorStore = {},
+        id, starter;
 
     function saveForm(storage, self) {
         self.find('input').each(function () {
@@ -51,13 +48,7 @@ $(function () {
         });
     }
 
-    // Initialize stores by saving forms.
-    saveForm(gasStore, gasModal);
-    saveForm(liquidStore, liquidModal);
-    saveForm(colorStore, colorModal);
-
-    // Bind event listeners.
-    $('#start').click(function () {
+    function prepareData() {
         var data = {},
             main = $('#main-form').serializeArray();
 
@@ -68,18 +59,62 @@ $(function () {
         data.sensors = [];
         data.sensors.push(gasStore);
         data.sensors.push(liquidStore);
+        return data;
+    }
+
+    // Initialize stores by saving forms.
+    saveForm(gasStore, gasModal);
+    saveForm(liquidStore, liquidModal);
+    saveForm(colorStore, colorModal);
+
+    // Bind event listeners.
+    $('#start').click(function () {
+        var data = prepareData();
         $.ajax({
             type: 'post',
             url: '/experiment',
             data: data
         }).done(function (jqXHR) {
-            console.log(jqXHR);
+            id = jqXHR._id;
         }).fail(function (jqXHR) {
             addDismissibleAlert('danger',
                 jqXHR.responseText,
                 $('#ajax-alerts'));
         });
     });
+    $('#update').click(function () {
+        var data = prepareData();
+        $.ajax({
+            type: 'put',
+            url: '/experiment/' + id,
+            data: data
+        }).done(function () {
+            addDismissibleAlert('success',
+                'Experiment updated',
+                $('#ajax-alerts'));
+        }).fail(function (jqXHR) {
+            addDismissibleAlert('danger',
+                jqXHR.responseText,
+                $('#ajax-alerts'));
+        });
+    });
+    $('#stop').click(function () {
+        $.ajax({
+            type: 'put',
+            url: '/experiment/' + id,
+            data: {
+                stop: Date.now(),
+                cancelled: false
+            }
+        }).done(function (jqXHR) {
+            id = null;
+        }).fail(function (jqXHR) {
+            addDismissibleAlert('danger',
+                jqXHR.responseText,
+                $('#ajax-alerts'));
+        });
+    });
+
     gasModal.find('#save').click(function () {
         saveForm(gasStore, gasModal);
     });
@@ -109,5 +144,27 @@ $(function () {
     });
     $('#camera-btn').click(function () {
         colorModal.modal();
+    });
+
+    index.socket.on('status', function (status) {
+        if (status) {
+            // Experiment running. Need to handle different users.
+
+            // For user who is running experiment.
+            $('#update').removeClass('hidden');
+            $('#start').addClass('hidden');
+            $('#stop').prop({ disabled: false });
+            $('#name').prop({ disabled: true });
+            addAlert('info',
+                'Experiment running',
+                $('#socket-alerts'));
+        } else {
+            // No experiment running.
+            $('#update').addClass('hidden');
+            $('#start').removeClass('hidden');
+            $('#stop').prop({ disabled: true });
+            $('#name').prop({ disabled: false });
+            $('#socket-alerts').empty();
+        }
     });
 });

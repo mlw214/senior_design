@@ -1,17 +1,18 @@
-var account = (function () {
-    'use strict';
-
-    var socket = io.connect('http://localhost:3000/');
-    socket.on('alert', function (alert, message) {
-        addSocketAlert(alert, message);
-    });
-    return {
-        socket: socket,
-    };
-}());
+var socket = io.connect('http://localhost:3000/');
 
 $(function () {
     'use strict';
+
+    socket.on('status', function (status) {
+        if (status) {
+            addAlert('info',
+                'Experiment running',
+                $('#socket-alerts'));
+        } else {
+            $('#socket-alerts').empty();
+        }
+    });
+
     $('#contact-form').submit(function (event) {
         var form = $(this);
         $.ajax({

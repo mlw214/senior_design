@@ -23,8 +23,38 @@ mongoose.connect('mongodb://localhost/lab');
   }
 });*/
 
-User.findOne({ _id: "52c37bb396d1501f98000002", 'experiments.name': 'Bob'},
-  function (err, user) {
-  if (err || !user) return console.log(err);
-  console.log(user);
-})
+User.findOne({ username: 'mlw214' }, function (err, user) {
+  if (err) return console.log(err);
+  var exp = {
+    name: 'test3',
+    description: 'This is a test',
+    cancelled: false,
+    rate: 1,
+    contact: 'none',
+    camera: {
+      used: true,
+      bound: 'Red',
+      auto: false
+    },
+    sensors: [{
+      type: 'Gas',
+      used: true,
+      lower: 55,
+      upper: 555,
+      auto: false
+    }, {
+      type: 'Liquid',
+      used: true,
+      lower: 55,
+      upper: 555,
+      auto: false
+    }],
+    path: '/Users/millerwilt'
+  };
+  user.experiments.push(exp);
+  user.save(function (err, prod, num) {
+    if (err) return console.log(err);
+    var exp = prod.experiments[prod.experiments.length-1];
+    console.log(exp);
+  });
+});

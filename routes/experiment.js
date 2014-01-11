@@ -1,5 +1,7 @@
 var User = require('../models/user'),
-    fs = require('fs');
+    arduino = require('../lib/arduino'),
+    path = require('path'),
+    root = path.resolve(__dirname, '../experiment-files/') + '/';
 
 exports.read = function (req, res, next) {
   var id = req.params.id,
@@ -23,16 +25,25 @@ exports.readAll = function (req, res) {
 exports.create = function (req, res) {
   var exp = req.body,
       uid = req.session.uid;
-  console.log(exp);
-  User.findOne({_id: uid, 'experiments.name': exp.name}, function (err, user) {
+  User.findById(uid, function (err, user) {
     if (err) return next(err);
-    if (user) return res.send(400, 'Experiment name already taken');
-    exp.path = __dirname + '/../experiment-files/' + user.username + '/' +
-      exp.name;
+    if (!user) return res.send(500, 'Internal Server Error');
+    exp.name = exp.name.trim();
+    for (var i = 0; i < user.experiments.length; ++i) {
+      if (user.experiments[i].name === exp.name) {
+        res.send(400, 'Experiment name already taken');
+        return;
+      }
+    }
+    exp.path = root + user.username + '/' + exp.name;
+    if (!arduino.locked) arduino.lock();
+    else return res.send(400, 'Experiment already underway');
     user.experiments.push(exp);
     user.save(function (err, prod, num) {
       if (err) return next(err);
-      res.send(200, prod.experiments[prod.experiments.length-1]);
+      var exp = prod.experiments[prod.experiments.length-1];
+      arduino.setExperiment(exp, null);
+      res.send(200, exp);
     });
   });
 };
@@ -41,8 +52,12 @@ exports.update = function (req, res) {
   var id = req.params.id,
       exp = req.body,
       uid = req.session.uid;
+  // Experiment name not allowed to be updated.
+  // _id isn't allowed to be updated (mongoose enforced), 
+  // and __v probably shouldn't.
   delete exp._id;
   delete exp.__v;
+  delete exp.name;
   User.findById(uid, function (err, user) {
     if (err || !user) return next(err);
     var doc = user.experiments.id(id);
@@ -52,6 +67,11 @@ exports.update = function (req, res) {
     }
     user.save(function (err, prod, num) {
       if (err) return next(err);
+      var exp = prod.experiments.id(id);
+      if (exp.stop) {
+        arduino.clearExperiment();
+        arduino.unlock();
+      } else arduino.updateExperiment(exp, null);
       res.send(200, prod.experiments.id(id));
     });
   });

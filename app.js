@@ -23,10 +23,9 @@ var express = require('express'),
     loadUser = require('./lib/middleware/loaduser'),
     verify = require('./lib/middleware/verification'),
 // Other.
-    spawn = require('child_process').spawn,
+    arduino = require('./lib/arduino');
     User = require('./models/user'),
-    MemoryStore = express.session.MemoryStore,
-    proc;
+    MemoryStore = express.session.MemoryStore;
 
 // Create Express app, HTTP server, Socket.io, and session store.
 var app = express(),
@@ -126,23 +125,9 @@ app.put('/experiment/:id', auth(true), experiment.update);
 app.delete('/experiment/:id', auth(true), experiment.delete);
 app.get('/experiment/:id/download', auth(true), experiment.download);
 
-// Socket.io connection handling.
-io.on('connection', function (socket) {
-  socket.on('subscribe', function (room) {
-    socket.join(room);
-  });
-});
-
 // Arduino services.
-proc = spawn(__dirname + '/lib/c++/arduino');
-proc.stdout.on('data', function (data) {
-  var values = data.toString().trim().split(' ');
-  io.sockets.in('data').emit('data', { 
-    sensor1: values[0],
-    sensor2: values[1]
-  });
-});
-
+arduino.initialize(io);
+arduino.start();
 
 // All setup, time to listen!
 server.listen(app.get('port'), function () {

@@ -1,6 +1,8 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
-var Experiment = require('./experiment');
+var mongoose = require('mongoose'),
+    bcrypt = require('bcrypt'),
+    Experiment = require('./experiment'),
+    fs = require('fs'),
+    root = __dirname + '/../experiment-files/';
 
 var userSchema = new mongoose.Schema({
   username: { type: String, index: true },
@@ -37,7 +39,10 @@ userSchema.statics.newInstance = function (name, pass, fn) {
       bcrypt.hash(pass, salt, function (err, hash) {
         if (err) return fn(err);
         user.password = hash;
-        fn(null, user);
+        fs.mkdir(root + user.username, 0755, function (err) {
+          if (err) return fn(err);
+          fn(null, user);
+        });
       });
     });
   });

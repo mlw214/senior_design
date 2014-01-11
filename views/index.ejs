@@ -27,6 +27,7 @@
       </div> <!-- header -->
       <div class="body">
         <h2>Run an Experiment</h2>
+        <div id="socket-alerts"></div>
         <div class="panel panel-default" id="accordion">
           <div class="panel-heading">
             <h4 class="panel-title">
@@ -94,17 +95,24 @@
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6">
-            <div class="btn-group btn-group-lg">
-              <button id="start" class="btn btn-primary">Start</button>
-              <button id="stop" class="btn btn-danger">Stop</button>
-            </div>
+            <button id="start" class="btn btn-lg btn-primary">
+            Start
+            </button>
+            <button id="update" class="btn btn-lg btn-primary hidden">
+            Update
+            </button>
+            <button id="stop" class="btn btn-lg btn-danger">
+            Stop
+            </button>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="text-right">
-              <div class="btn-group btn-group-lg">
-                <button class="btn btn-primary">Relay On</button>
-                <button class="btn btn-danger">Cancel</button>
-              </div>
+              <button class="btn btn-lg btn-danger">
+              Cancel
+              </button>
+              <button class="btn btn-lg btn-primary">
+              Relay On
+              </button>
             </div>
           </div>
         </div>
