@@ -87,7 +87,7 @@ var archive = (function () {
         collection = new ExperimentList(),
         collectionView = new ExperimentListView({ collection: collection });
 
-    socket = io.connect('http://localhost:3000');
+    socket = io.connect('http://localhost:3000/a');
     collection.fetch();
 
 
@@ -99,5 +99,15 @@ var archive = (function () {
 }());
 
 $(function () {
+    archive.socket.on('status', function (status) {
+        if (status) {
+            addAlert('info',
+                'Experiment running',
+                $('#socket-alerts'));
+        } else {
+            $('#socket-alerts').empty();
+        }
+    });
+
     $('#experiments').html(archive.collectionView.el);
 });

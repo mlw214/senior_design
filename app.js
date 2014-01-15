@@ -52,10 +52,10 @@ io.configure(function () {
       return cb('No cookie', false);
     }
     sessionStore.get(sessionID, function (err, session) {
-      if (err) return cb('500 Internal Server Error', false);
+      if (err) return cb('Internal Server Error', false);
       if (session) {
         User.findById(session.uid, function (err, doc) {
-          if (err) if (err) return cb('500 Internal Server Error', false);
+          if (err) if (err) return cb('Internal Server Error', false);
           if (doc) {
             handshakeData.sid = sessionID;
             handshakeData.uid = doc.id;
@@ -69,6 +69,7 @@ io.configure(function () {
       }
     });
   });
+  io.set('log level', 1);
 });
 
 // Express configuration - all environments.

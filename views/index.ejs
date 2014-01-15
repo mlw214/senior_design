@@ -53,8 +53,8 @@
                   <label for="period" class="control-label">
                   Collection Rate (seconds)
                   </label>
-                  <input type="number" class="form-control" id="peroid"
-                    value="1" name="speed" min="1" required>
+                  <input type="number" class="form-control" id="period"
+                    value="1" name="rate" min="1" required>
                   <span class="help-block">
                     <small>
                     How often experiment data will be written to file.
@@ -72,19 +72,21 @@
                 </label>
                 <div class="form-group">
                   <label class="radio-inline">
-                    <input type="radio" value="none" name="contact" checked>
+                    <input type="radio" id="none" value="none" name="contact"
+                      checked>
                     None
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" value="email" name="contact">
+                    <input type="radio" id="email" value="email"
+                      name="contact">
                     Email
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" value="text" name="contact">
+                    <input type="radio" id="text" value="text" name="contact">
                     Text
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" value="both" name="contact">
+                    <input type="radio" id="both" value="both" name="contact">
                     Both
                   </label>
                 </div>
@@ -107,10 +109,10 @@
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="text-right">
-              <button class="btn btn-lg btn-danger">
+              <button id="cancel" class="btn btn-lg btn-danger">
               Cancel
               </button>
-              <button class="btn btn-lg btn-primary">
+              <button id="relay" class="btn btn-lg btn-primary">
               Relay On
               </button>
             </div>

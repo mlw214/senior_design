@@ -1,38 +1,21 @@
-var index = (function () {
-    var socket = io.connect('http://localhost:3000'),
-        running;
-    socket.on('connect', function () {
-        socket.emit('subscribe', 'data');
-    });
-    socket.on('data', function (data) {
-        $('#liquid').html(data.liquid);
-        $('#gas').html(data.gas);
-    });
-    return {
-        socket: socket
-    };
-}());
-
-
+var socket = io.connect('http://localhost:3000/da');
 $(function () {
+    'use strict';
     var gasModal = $('#gas-modal'),
         liquidModal = $('#liquid-modal'),
         colorModal = $('#color-modal'),
         gasStore = { type: 'Gas Temperature Sensor' },
         liquidStore = { type: 'Liquid Temperature Sensor' },
         colorStore = {},
-        id, starter;
+        id, operatingMode;
 
     function saveForm(storage, self) {
-        self.find('input').each(function () {
+        self.find('input, select').each(function () {
             if ($(this).attr('type') === 'checkbox') {
                 storage[$(this).attr('name')] = $(this).prop('checked');
             } else {
                 storage[$(this).attr('name')] = $(this).val();
             }
-        });
-        self.find('select').each(function () {
-            storage[$(this).attr('name')] = $(this).val();
         });
     }
 
@@ -60,6 +43,16 @@ $(function () {
         data.sensors.push(gasStore);
         data.sensors.push(liquidStore);
         return data;
+    }
+
+    function restoreExperiment(experiment) {
+        var main = $('#main-form');
+        main.find('#name').val(experiment.name);
+        main.find('#period').val(experiment.rate);
+        main.find('textarea').val(experiment.description);
+        main.find('#' + experiment.contact).prop('checked', true);
+
+        // Restore modal forms.
     }
 
     // Initialize stores by saving forms.
@@ -146,25 +139,61 @@ $(function () {
         colorModal.modal();
     });
 
-    index.socket.on('status', function (status) {
+    socket.on('data', function (data) {
+        $('#liquid').html(data.liquid);
+        $('#gas').html(data.gas);
+    });
+    socket.on('status', function (status) {
         if (status) {
-            // Experiment running. Need to handle different users.
-
-            // For user who is running experiment.
-            $('#update').removeClass('hidden');
-            $('#start').addClass('hidden');
-            $('#stop').prop({ disabled: false });
-            $('#name').prop({ disabled: true });
+            // Experiment running.
+            // Rest of UI changes handled by 'mode' event.
             addAlert('info',
                 'Experiment running',
                 $('#socket-alerts'));
         } else {
             // No experiment running.
-            $('#update').addClass('hidden');
-            $('#start').removeClass('hidden');
-            $('#stop').prop({ disabled: true });
-            $('#name').prop({ disabled: false });
+            // Handle differently based on operating mode.
+            if (operatingMode) {
+                $('#update').addClass('hidden');
+                $('#start').removeClass('hidden');
+                $('#stop').prop({ disabled: true });
+                $('#name').prop({ disabled: false });
+                id = null;
+                operatingMode = false;
+            } else {
+                $('#start').prop({ disabled: false });
+                $('#stop').prop({ disabled: false });
+                $('#cancel').prop({ disabled: false });
+                $('#relay').prop({ disabled: false });
+            }  
             $('#socket-alerts').empty();
         }
+    });
+    socket.on('experimentID', function (eid) {
+        id = eid;
+        $.ajax({
+            type: 'get',
+            url: '/experiment/' + id,
+        }).done(function (jqXHR) {
+            restoreExperiment(jqXHR);
+        }).fail(function (jqXHR) {
+            // Need to handle failure.
+            console.log(jqXHR);
+        });
+    });
+    socket.on('mode', function (mode) {
+        operatingMode = mode;
+        if (mode) {
+            $('#update').removeClass('hidden');
+            $('#start').addClass('hidden');
+            $('#stop').prop({ disabled: false });
+            $('#name').prop({ disabled: true });
+        } else {
+            $('#start').prop({ disabled: true });
+            $('#stop').prop({ disabled: true });
+            $('#cancel').prop({ disabled: true });
+            $('#relay').prop({ disabled: true });
+        }
+        console.log(operatingMode);
     });
 });

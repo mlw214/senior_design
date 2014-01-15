@@ -1,7 +1,8 @@
 var User = require('../models/user'),
     arduino = require('../lib/arduino'),
     path = require('path'),
-    root = path.resolve(__dirname, '../experiment-files/') + '/';
+    root = path.resolve(__dirname, '../experiment-files/') + '/',
+    fs = require('fs');
 
 exports.read = function (req, res, next) {
   var id = req.params.id,
@@ -42,7 +43,11 @@ exports.create = function (req, res) {
     user.save(function (err, prod, num) {
       if (err) return next(err);
       var exp = prod.experiments[prod.experiments.length-1];
-      arduino.setExperiment(exp, null);
+      arduino.setExperiment(exp, {
+        _id: prod._id,
+        username: prod.username,
+        contacts: prod.contacts
+      });
       res.send(200, exp);
     });
   });
@@ -71,7 +76,7 @@ exports.update = function (req, res) {
       if (exp.stop) {
         arduino.clearExperiment();
         arduino.unlock();
-      } else arduino.updateExperiment(exp, null);
+      } else arduino.updateExperiment(exp);
       res.send(200, prod.experiments.id(id));
     });
   });
@@ -85,9 +90,12 @@ exports.delete = function (req, res) {
     var doc = user.experiments.id(id);
     if (!doc) return res.send(404, 'Experiment not found');
     doc = doc.remove();
-    user.save(function (err, prod, num) {
+    fs.unlink(doc.path, function (err) {
       if (err) return next(err);
-      res.send(200, doc);
+      user.save(function (err, prod, num) {
+        if (err) return next(err);
+        res.send(200, doc);
+      });
     });
   });
 };

@@ -2,7 +2,9 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     Experiment = require('./experiment'),
     fs = require('fs'),
-    root = __dirname + '/../experiment-files/';
+    root = __dirname + '/../experiment-files/',
+    crypto = require('crypto'),
+    shasum = crypto.createHash('sha256');
 
 var userSchema = new mongoose.Schema({
   username: { type: String, index: true },
@@ -24,7 +26,7 @@ userSchema.statics.authenticate = function (name, pass, fn) {
       if (err) return fn(err);
       if (res) return fn(null, user);
       fn();
-    })
+    });
   });
 };
 
