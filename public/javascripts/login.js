@@ -2,6 +2,7 @@ $(function () {
     'use strict';
     $('form').submit(function (event) {
         var form = $(this);
+        $('#ajax-alerts').empty();
         $.ajax({
             type: form.attr('method'),
             url: form.attr('action'),

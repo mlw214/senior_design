@@ -17,7 +17,7 @@ exports.read = function (req, res, next) {
 
 exports.readAll = function (req, res) {
   var uid = req.session.uid;
-  User.findOne(uid, function (err, user) {
+  User.findById(uid, function (err, user) {
     if (err || !user) return next(err);
     res.send(200, user.experiments);
   });
@@ -57,6 +57,14 @@ exports.update = function (req, res) {
   var id = req.params.id,
       exp = req.body,
       uid = req.session.uid;
+
+  // If experiment is running, make sure user is the same
+  // as the one who started the experiment.
+  if (arduino.locked) {
+    if (uid.toString() !== arduino.user._id.toString()) {
+      res.send(401, 'Update denied');
+    }
+  }
   // Experiment name not allowed to be updated.
   // _id isn't allowed to be updated (mongoose enforced), 
   // and __v probably shouldn't.

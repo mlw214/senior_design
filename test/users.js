@@ -25,7 +25,7 @@ mongoose.connect('mongodb://localhost/lab');
 
 User.findOne({ username: 'mlw214' }, function (err, user) {
   if (err) return console.log(err);
-  var exp = {
+  /*var exp = {
     name: 'test3',
     description: 'This is a test',
     cancelled: false,
@@ -56,5 +56,6 @@ User.findOne({ username: 'mlw214' }, function (err, user) {
     if (err) return console.log(err);
     var exp = prod.experiments[prod.experiments.length-1];
     console.log(exp);
-  });
+  });*/
+  console.log(JSON.stringify(user.experiments[0]));
 });

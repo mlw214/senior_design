@@ -18,6 +18,7 @@ var express = require('express'),
     archive = require('./routes/archive'),
     account = require('./routes/account'),
     experiment = require('./routes/experiment'),
+    arduinoRoute = require('./routes/arduino'),
 // Middleware modules.
     auth = require('./lib/middleware/authenticate'),
     loadUser = require('./lib/middleware/loaduser'),
@@ -117,6 +118,9 @@ app.post('/account/update/contact',
 app.post('/account/update/password', auth(true), account.changePassword);
 app.post('/account/update/delete', auth(true), account.deleteAccount);
 app.get('/logout', login.logout);
+
+app.put('/relay', auth(true), arduinoRoute.relay);
+app.put('/solenoid', auth(true), arduinoRoute.solenoid);
 
 // RESTful services.
 app.get('/experiment', auth(true), experiment.readAll);

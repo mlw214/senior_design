@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3000/da');
+var socket = io.connect('http://' + location.hostname + '/da');
 $(function () {
     'use strict';
     var gasModal = $('#gas-modal'),
@@ -24,7 +24,15 @@ $(function () {
             var type = $(this).attr('type'),
                 name = $(this).attr('name');
             if (type === 'checkbox') {
-                $(this).prop('checked', storage[name]);
+                if (name === 'auto') {
+                    if (storage[name]) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                } else {
+                    $(this).prop('checked', storage[name]);
+                }
             } else {
                 $(this).val(storage[name]);
             }
@@ -46,13 +54,45 @@ $(function () {
     }
 
     function restoreExperiment(experiment) {
-        var main = $('#main-form');
+        var main = $('#main-form'),
+            key, i, n;
         main.find('#name').val(experiment.name);
         main.find('#period').val(experiment.rate);
         main.find('textarea').val(experiment.description);
         main.find('#' + experiment.contact).prop('checked', true);
 
         // Restore modal forms.
+        for (key in colorStore) {
+            colorStore[key] = experiment.camera[key];
+        }
+        for (i = 0, n = experiment.sensors.length; i < n; ++i) {
+            if (gasStore.type === experiment.sensors[i].type) {
+                for (key in gasStore) {
+                    if (key === 'used' || key === 'auto') {
+                        if (experiment.sensors[i][key] === 'true') {
+                            experiment.sensors[i][key] = true;
+                        } else {
+                            experiment.sensors[i][key] = false;
+                        }
+                    }
+                    gasStore[key] = experiment.sensors[i][key];
+                }
+            } else if (liquidStore.type === experiment.sensors[i].type) {
+                for (key in liquidStore) {
+                    if (key === 'used' || key === 'auto') {
+                        if (experiment.sensors[i][key] === 'true') {
+                            experiment.sensors[i][key] = true;
+                        } else {
+                            experiment.sensors[i][key] = false;
+                        }
+                    }
+                    liquidStore[key] = experiment.sensors[i][key];
+                }
+            }
+        }
+        restoreForm(colorStore, colorModal);
+        restoreForm(gasStore, gasModal);
+        restoreForm(liquidStore, liquidModal);
     }
 
     // Initialize stores by saving forms.
@@ -107,6 +147,19 @@ $(function () {
                 $('#ajax-alerts'));
         });
     });
+    $('#relay').click(function () {
+        // Need to handle failure.
+        $.ajax({
+            type: 'put',
+            url: '/relay'
+        });
+    });
+    $('#cancel').click(function () {
+        $.ajax({
+            type: 'put',
+            url: '/solenoid'
+        });
+    });
 
     gasModal.find('#save').click(function () {
         saveForm(gasStore, gasModal);
@@ -140,11 +193,40 @@ $(function () {
     });
 
     socket.on('data', function (data) {
-        $('#liquid').html(data.liquid);
-        $('#gas').html(data.gas);
+        $('#liquid').html(data.l);
+        $('#gas').html(data.a);
     });
-    socket.on('status', function (status) {
-        if (status) {
+    socket.on('status', function (obj) {
+        if (obj.status) {
+            addAlert('info',
+                'Experiment running',
+                $('#socket-alerts'));
+        } else {
+            if (operatingMode) {
+                $('#update').addClass('hidden');
+                $('#start').removeClass('hidden');
+                $('#stop').prop({ disabled: true });
+                $('#name').prop({ disabled: false });
+                id = null;
+                operatingMode = false;
+            } else {
+                $('#start').prop({ disabled: false });
+                $('#cancel').prop({ disabled: false });
+                $('#relay').prop({ disabled: false });
+            }  
+            $('#socket-alerts').empty();
+        }
+        if (obj.relay) {
+            $('#relay').html('Relay On');
+        } else {
+            $('#relay').html('Relay Off');
+        }
+        if (obj.solenoid) {
+            $('#cancel').html('Canceller On')
+        } else {
+            $('#cancel').html('Canceller Off')
+        }
+        /*if (status) {
             // Experiment running.
             // Rest of UI changes handled by 'mode' event.
             addAlert('info',
@@ -162,12 +244,11 @@ $(function () {
                 operatingMode = false;
             } else {
                 $('#start').prop({ disabled: false });
-                $('#stop').prop({ disabled: false });
                 $('#cancel').prop({ disabled: false });
                 $('#relay').prop({ disabled: false });
             }  
             $('#socket-alerts').empty();
-        }
+        }*/
     });
     socket.on('experimentID', function (eid) {
         id = eid;
@@ -194,6 +275,5 @@ $(function () {
             $('#cancel').prop({ disabled: true });
             $('#relay').prop({ disabled: true });
         }
-        console.log(operatingMode);
     });
 });

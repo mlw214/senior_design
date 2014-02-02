@@ -3,6 +3,7 @@ var User = require('../models/user'),
     fs = require('fs');
 
 exports.edit = function (req, res) {
+  console.log(req.session);
   res.render('account', {
     title: 'Account Info',
     username: req.session.username,

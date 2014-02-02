@@ -87,7 +87,7 @@ var archive = (function () {
         collection = new ExperimentList(),
         collectionView = new ExperimentListView({ collection: collection });
 
-    socket = io.connect('http://localhost:3000/a');
+    socket = io.connect('http://' + location.hostname + '/a');
     collection.fetch();
 
 

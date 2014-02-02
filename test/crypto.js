@@ -4,4 +4,9 @@ var bcrypt = require('bcrypt'),
 
 shasum.write('password');
 shasum.end();
-console.log(shasum.read());
+bcrypt.genSalt(12, function (err, salt) {
+	if (err) return console.log(err);
+	bcrypt.hash(shasum.read(), salt, function (err, hash) {
+		if (err) return console.log(err);
+	})
+})
